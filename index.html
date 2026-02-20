@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Ton quartier en 3 chiffres — Mérignac</title>
+<meta name="description" content="Choisis ton quartier de Mérignac et découvre 3 chiffres qui vont te surprendre.">
+<meta property="og:title" content="Ton quartier en 3 chiffres — Mérignac">
+<meta property="og:description" content="Sélectionne ton quartier et découvre ce que disent les chiffres.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#000091;--blue-deep:#040452;--yellow:#FFFF00;--white:#fff;--gray:#a0a0cc;--success:#22c55e;--error:#ef4444}
+html{font-size:16px;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#000091 0%,#060673 40%,#040452 100%);background-attachment:fixed;color:var(--white);min-height:100dvh;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,0,180,0.2) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(255,255,0,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+.screen{display:none;flex-direction:column;align-items:center;padding:24px 20px;flex:1}.screen.active{display:flex}
+.intro{justify-content:center;text-align:center;gap:28px}
+.intro .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);font-weight:700;opacity:0.8}
+.intro h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,11vw,58px);line-height:0.95;letter-spacing:-1px}
+.intro h1 em{color:var(--yellow);font-style:normal}
+.intro .desc{font-size:15px;line-height:1.6;color:var(--gray);max-width:340px}.intro .desc b{color:var(--white);font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;border:none;cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.btn-primary{background:var(--yellow);color:var(--blue-deep);box-shadow:0 0 40px rgba(255,255,0,0.2)}.btn-primary:hover{transform:scale(1.04);box-shadow:0 0 60px rgba(255,255,0,0.35)}.btn-primary:active{transform:scale(0.97)}
+.btn-secondary{background:rgba(255,255,255,0.08);color:var(--white);border:1px solid rgba(255,255,255,0.15)}.btn-secondary:hover{background:rgba(255,255,255,0.14)}
+.picker{justify-content:flex-start;text-align:center;gap:20px;padding-top:40px}
+.picker h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,8vw,36px);line-height:1.05}
+.picker h2 em{color:var(--yellow);font-style:normal}
+.picker .pick-sub{font-size:13px;color:var(--gray);max-width:320px}
+.quartier-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:400px;margin-top:4px}
+.q-btn{padding:14px 12px;border-radius:5px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center}
+.q-btn:hover{background:rgba(255,255,0,0.08);border-color:rgba(255,255,0,0.3)}.q-btn:active{transform:scale(0.96)}
+.q-btn .q-icon{font-size:20px;display:block;margin-bottom:4px}
+.reveal-screen{justify-content:flex-start;text-align:center;gap:0;padding-top:20px}
+.reveal-header{width:100%;text-align:center;margin-bottom:24px}
+.reveal-header .rh-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);font-weight:700;opacity:0.7;margin-bottom:6px}
+.reveal-header h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,9vw,42px);line-height:1}
+.reveal-header h2 em{color:var(--yellow);font-style:normal}
+.stat-cards{display:flex;flex-direction:column;gap:14px;width:100%;margin-bottom:24px}
+.stat-card{border-radius:5px;padding:24px 20px;text-align:left;background:linear-gradient(145deg,rgba(0,0,120,0.9),rgba(4,4,72,0.95));border:1px solid rgba(255,255,255,0.1);box-shadow:0 10px 40px rgba(0,0,0,0.3);opacity:0;transform:translateY(20px);animation:fadeUp 0.5s cubic-bezier(0.4,0,0.2,1) forwards}
+.stat-card:nth-child(1){animation-delay:0.1s}.stat-card:nth-child(2){animation-delay:0.3s}.stat-card:nth-child(3){animation-delay:0.5s}
+.stat-card .sc-number{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,10vw,48px);color:var(--yellow);line-height:1;margin-bottom:4px}
+.stat-card .sc-label{font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px;line-height:1.3}
+.stat-card .sc-detail{font-size:12px;color:var(--gray);line-height:1.5}
+.stat-card .sc-source{font-size:10px;color:var(--gray);opacity:0.5;margin-top:8px;text-transform:uppercase;letter-spacing:1px}
+.proposals-section{width:100%;border-radius:5px;padding:24px 20px;background:rgba(255,255,0,0.04);border:1px solid rgba(255,255,0,0.15);text-align:left;margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.7s forwards}
+.proposals-section .ps-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);font-weight:700;margin-bottom:12px;opacity:0.7}
+.proposals-section .ps-title{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1.1;color:var(--yellow);margin-bottom:14px}
+.proposals-section ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.proposals-section li{font-size:13px;line-height:1.5;padding-left:18px;position:relative;color:rgba(255,255,255,0.85)}
+.proposals-section li::before{content:'→';position:absolute;left:0;color:var(--yellow);font-weight:700}
+.cta-area{width:100%;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.9s forwards}
+.cta-area .result-cta{width:100%;padding:20px;border-radius:5px;background:linear-gradient(145deg,rgba(0,0,145,0.6),rgba(4,4,82,0.8));border:1px solid rgba(255,255,0,0.2);position:relative;overflow:hidden}
+.cta-area .result-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--yellow)}
+.cta-area .cta-name{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--yellow)}
+.cta-area .cta-list{font-size:13px;color:var(--white);margin-top:2px;font-weight:500}
+.cta-area .cta-rassemble{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--yellow);letter-spacing:2px;margin-top:6px}
+.cta-area .cta-alliance{font-size:11px;color:var(--gray);margin-top:4px}
+.share-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.share-row .btn{padding:12px 20px;font-size:13px;border-radius:5px}
+.btn-whatsapp{background:#25D366;color:#fff;text-decoration:none;box-shadow:0 0 20px rgba(37,211,102,0.2)}.btn-whatsapp:hover{box-shadow:0 0 30px rgba(37,211,102,0.35);transform:scale(1.03)}.btn-whatsapp svg{width:20px;height:20px;fill:#fff;flex-shrink:0}
+.back-link{font-size:13px;color:var(--gray);cursor:pointer;border:none;background:none;font-family:inherit;margin-top:8px;transition:color 0.2s}.back-link:hover{color:var(--white)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) both}.fade-in-d1{animation-delay:0.1s}.fade-in-d2{animation-delay:0.2s}.fade-in-d3{animation-delay:0.3s}.fade-in-d4{animation-delay:0.4s}
+@media(max-width:360px){.quartier-grid{gap:8px}.q-btn{padding:12px 10px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="screen intro active" id="screen-intro">
+    <div class="eyebrow fade-in">Mérignac quartier par quartier</div>
+    <h1 class="fade-in fade-in-d1">Ton<br>quartier<br>en <em>3 chiffres</em></h1>
+    <p class="desc fade-in fade-in-d2">Choisis <b>ton quartier</b> et découvre les données clés que la municipalité ne te communique pas.<br><b>+ les propositions concrètes pour y répondre.</b></p>
+    <button class="btn btn-primary fade-in fade-in-d3" onclick="showPicker()">Choisir mon quartier →</button>
+    <div class="fade-in fade-in-d4" style="font-size:11px;color:var(--gray);opacity:0.5">8 quartiers · 1 min</div>
+  </div>
+
+  <div class="screen picker" id="screen-picker">
+    <h2>Dans quel <em>quartier</em><br>habites-tu ?</h2>
+    <p class="pick-sub">Sélectionne pour découvrir tes 3 chiffres</p>
+    <div class="quartier-grid" id="quartier-grid"></div>
+  </div>
+
+  <div class="screen reveal-screen" id="screen-reveal">
+    <div class="reveal-header"><div class="rh-label">Ton quartier</div><h2 id="rv-quartier-name"></h2></div>
+    <div class="stat-cards" id="stat-cards"></div>
+    <div class="proposals-section" id="proposals-section">
+      <div class="ps-label">Ce que nous proposons pour ton quartier</div>
+      <div class="ps-title" id="ps-title"></div>
+      <ul id="ps-list"></ul>
+    </div>
+    <div class="cta-area">
+      <div class="result-cta">
+        <div class="cta-name">THIERRY MILLET</div>
+        <div class="cta-list">Candidat à la mairie de Mérignac</div>
+        <div class="cta-rassemble">MÉRIGNAC NOUS RASSEMBLE</div>
+        <div class="cta-alliance">Liste d'union · Société civile · Droite &amp; Centre</div>
+      </div>
+      <div class="share-row">
+        <button class="btn btn-primary" id="btn-share" onclick="shareQuartier()">Partager</button>
+        <button class="btn btn-secondary" onclick="showPicker()">Autre quartier</button>
+      </div>
+      <a class="btn btn-whatsapp" href="https://wa.me/33620350289?text=Bonjour%20!%20J%27ai%20d%C3%A9couvert%20les%20chiffres%20de%20mon%20quartier%20et%20j%27aimerais%20en%20savoir%20plus." target="_blank" rel="noopener" style="width:100%;max-width:340px;padding:14px 24px;font-size:15px">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.554 4.123 1.526 5.857L.058 23.7a.5.5 0 00.612.612l5.843-1.468A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.82c-1.964 0-3.836-.53-5.469-1.533l-.392-.234-3.466.871.914-3.34-.256-.406A9.803 9.803 0 012.18 12c0-5.422 4.398-9.82 9.82-9.82 5.422 0 9.82 4.398 9.82 9.82 0 5.422-4.398 9.82-9.82 9.82z"/></svg>
+        Contacter Thierry Millet
+      </a>
+      <button class="back-link" onclick="showPicker()">← Choisir un autre quartier</button>
+    </div>
+  </div>
+</div>
+<script>
+const QUARTIERS = [
+  {
+    name:"Centre-ville",icon:"🏛️",
+    stats:[
+      {number:"+98 %",label:"de hausse de taxe foncière en 10 ans",detail:"519 € en 2014, 1 030 € en 2024 pour un 60 m². L'inflation n'a été que de 19 % sur la même période.",source:"Avis d'impôts locaux"},
+      {number:"11",label:"modifications du PLU votées par la majorité",detail:"Le Plan Local d'Urbanisme a été modifié 11 fois pour densifier toujours plus, sans concertation avec les habitants.",source:"Conseil métropolitain 2024"},
+      {number:"1 / 6",label:"seulement trouve l'info municipale transparente",detail:"La communication de la mairie est décriée : les « parcs » sont des squares, les « forêts » des bosquets d'arbres.",source:"Questionnaire citoyen"}
+    ],
+    proposalTitle:"Nos propositions pour le Centre-ville",
+    proposals:["Rendre piétonne la rue Aimé Césaire","Créer un square face à l'arrêt de tram","Dynamiser le marché du mercredi","Doter les plaques de rues de QR codes culturels et pratiques"]
+  },
+  {
+    name:"Capeyron",icon:"🏘️",
+    stats:[
+      {number:"250",label:"propriétés inondées d'eaux usées lors des orages",detail:"Les canalisations datent du siècle dernier. Elles sont insuffisantes pour les nouveaux immeubles branchés dessus.",source:"Témoignage colistier Philippe Massol"},
+      {number:"+98 %",label:"de hausse de taxe foncière en 10 ans",detail:"La mairie promettait des « taux qui restent stables ou même qui diminuent ». La réalité : ils ont doublé.",source:"Avis d'impôts locaux"},
+      {number:"30 ans",label:"d'opposition de Thierry Millet à l'urbanisation excessive",detail:"Fait sans précédent : en 2024, des maires de la métropole ont rejoint son vote contre la 11ème modification du PLU.",source:"Blog merignac-ville-durable.com"}
+    ],
+    proposalTitle:"Nos propositions pour Capeyron",
+    proposals:["Plan de mise aux normes du réseau d'assainissement avec la métropole","Piste cyclable en site propre Capeyron – Centre-ville – Lycées","Réorienter le PLU pour un urbanisme plus humain","Stabiliser la fiscalité locale et auditer la gestion"]
+  },
+  {
+    name:"Beutre /<br>Bourranville",nameClean:"Beutre / Bourranville",icon:"🏗️",
+    stats:[
+      {number:"« Oubliés »",label:"— c'est le mot des habitants de Beutre",detail:"Lors des réunions de quartier, les propositions des habitants sont très peu prises en compte par la mairie.",source:"Témoignage colistier Laurent Aviet"},
+      {number:"4",label:"concierges de quartier pour toute la ville",detail:"C'est totalement insuffisant. L'animation du quartier et le lien social en pâtissent directement.",source:"Données communales"},
+      {number:"1",label:"seul maître-chien pour toute la ville",detail:"Pas de brigade cynophile, pas de motos pour les interventions rapides. Le minimum n'est pas assuré.",source:"Données police municipale"}
+    ],
+    proposalTitle:"Nos propositions pour Beutre / Bourranville",
+    proposals:["Animer le centre de Beutre et investir dans l'aménagement du quartier","Créer une antenne de police municipale à Beutre et Bourranville","Aménager la plaine des sports (gymnase, parcours santé, espace détente)","Remplacer les 4 concierges par 10 agents de proximité"]
+  },
+  {
+    name:"Arlac",icon:"🎭",
+    stats:[
+      {number:"0",label:"événement culturel régulier par saison à Mérignac",detail:"Pas de rendez-vous culturels récurrents. Les habitants demandent des lieux conviviaux et des événements fédérateurs.",source:"Témoignage colistière Christine Darmaillacq"},
+      {number:"82 ans",label:"sans alternance politique",detail:"Depuis 1944, la même famille politique dirige la ville. PS, PC et EELV se partagent le pouvoir sans interruption.",source:"Historique municipal"},
+      {number:"1 / 6",label:"trouve l'information municipale transparente",detail:"La communication de la ville est perçue comme opaque. Les habitants veulent de la clarté, pas du marketing.",source:"Questionnaire citoyen"}
+    ],
+    proposalTitle:"Nos propositions pour Arlac",
+    proposals:["Donner une nouvelle vocation culturelle à la Maison Carrée d'Arlac","Organiser un événement culturel par saison (littérature, cinéma, musique, théâtre)","Soutenir les acteurs du Pin Galant pour une programmation diversifiée","Créer un événement festif autour de l'huître et du vin"]
+  },
+  {
+    name:"Pichey /<br>Yser",nameClean:"Pichey / Yser",icon:"🌳",
+    stats:[
+      {number:"« Parc »",label:"= un simple square selon la propagande municipale",detail:"La mairie rebaptise les espaces verts pour gonfler les chiffres : un bosquet devient « forêt », un square devient « parc ».",source:"Opposition municipale — 30 ans de combat"},
+      {number:"+42 %",label:"de population en 30 ans, voirie inchangée",detail:"De 57 000 à 80 898 habitants. Mais les rues, trottoirs et canalisations n'ont pas suivi la croissance.",source:"INSEE"},
+      {number:"+98 %",label:"de taxe foncière en 10 ans",detail:"Les nouveaux immeubles génèrent de la taxe foncière, mais la mairie augmente quand même les impôts des anciens résidents.",source:"Avis d'impôts locaux"}
+    ],
+    proposalTitle:"Nos propositions pour Pichey / Yser",
+    proposals:["Concertation pour le réaménagement de la place Nungesser et Coli","Préserver le plan de voirie de la cité de l'Yser, ses espaces verts et parkings","Tendre vers la règle 3-30-300 pour de vrais espaces verts","Réviser les vitesses en concertation avec les riverains"]
+  },
+  {
+    name:"Chemin Long",icon:"🛒",
+    stats:[
+      {number:"0",label:"incubateur commerce pour soutenir l'innovation locale",detail:"Les commerçants manquent d'accompagnement. 57 % des Mérignacais trouvent l'aide aux commerces insuffisante.",source:"Questionnaire citoyen"},
+      {number:"60 000",label:"emplois à Mérignac mais logement en tension",detail:"Aéroport, Aéroparc, bases militaires… Un bassin d'emploi majeur. Mais les salariés peinent à se loger sur place.",source:"Témoignage Pierre Goguet — CCI Bordeaux"},
+      {number:"1",label:"seul maître-chien pour 80 898 habitants",detail:"Aucune brigade cynophile. Pas de motos d'intervention rapide. Le budget sécurité est au 74ème rang sur 83 villes comparables.",source:"Données communales"}
+    ],
+    proposalTitle:"Nos propositions pour Chemin Long",
+    proposals:["Favoriser la réimplantation d'un bowling à Chemin Long","Créer un incubateur commerce pour accompagner l'innovation locale","Favoriser le logement pour ceux qui travaillent à Mérignac (PLS, PLI)","Doter la police municipale de motos pour des interventions rapides"]
+  },
+  {
+    name:"Marne Soleil /<br>Beaudésert",nameClean:"Marne Soleil / Beaudésert",icon:"☀️",
+    stats:[
+      {number:"11",label:"modifications du PLU pour densifier toujours plus",detail:"Chaque modification a permis de construire davantage sans adapter les infrastructures. L'opposition vote contre depuis 30 ans.",source:"Conseil métropolitain"},
+      {number:"0",label:"lieu culturel polyvalent dans le secteur",detail:"Marne Soleil manque d'un espace de vie culturelle. Les habitants réclament des lieux conviviaux de proximité.",source:"Témoignage colistière Christine Darmaillacq"},
+      {number:"250",label:"propriétés touchées par les eaux usées à proximité",detail:"Le réseau d'assainissement vétuste affecte aussi les quartiers voisins de Capeyron. Le problème est structurel.",source:"Témoignage colistier Philippe Massol"}
+    ],
+    proposalTitle:"Nos propositions pour Marne Soleil / Beaudésert",
+    proposals:["Implanter un lieu polyvalent à vocation culturelle dans le secteur","Mettre en lumière l'histoire du quartier Beaudésert","Pergolas et ombrières végétalisées, voiles d'ombrage zones de jeux","Donner de l'ampleur au festival Hypermondes"]
+  },
+  {
+    name:"Burck /<br>Eyquems",nameClean:"Burck / Eyquems",icon:"⚽",
+    stats:[
+      {number:"0",label:"salle dédiée aux arts martiaux et sports de combat",detail:"Malgré une demande croissante, aucune infrastructure adaptée. Les clubs se battent pour des créneaux insuffisants.",source:"Programme Mérignac Nous Rassemble"},
+      {number:"+42 %",label:"de population, infrastructures sportives vétustes",detail:"La salle Pierre de Coubertin et le foyer Roger Couderc n'ont pas été modernisés malgré l'explosion démographique.",source:"INSEE"},
+      {number:"4",label:"concierges pour toute la ville — insuffisant",detail:"Le lien social et la proximité avec les habitants passent après les dépenses de communication de la mairie.",source:"Données communales"}
+    ],
+    proposalTitle:"Nos propositions pour Burck / Eyquems",
+    proposals:["Moderniser la salle Pierre de Coubertin","Réhabiliter le foyer Roger Couderc","Doter les arts martiaux et sports de combat d'une nouvelle salle","Impliquer l'ESAT des Eyquems dans les actions de la Ville"]
+  }
+];
+let selectedQuartier=null;
+function showPicker(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-picker').classList.add('active');window.scrollTo(0,0)}
+function selectQuartier(i){selectedQuartier=QUARTIERS[i];document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-reveal').classList.add('active');window.scrollTo(0,0);renderReveal(selectedQuartier)}
+function renderReveal(q){document.getElementById('rv-quartier-name').innerHTML='<em>'+q.name+'</em>';const c=document.getElementById('stat-cards');c.innerHTML='';q.stats.forEach((s,i)=>{const d=document.createElement('div');d.className='stat-card';d.style.animationDelay=(0.1+i*0.2)+'s';d.innerHTML=`<div class="sc-number">${s.number}</div><div class="sc-label">${s.label}</div><div class="sc-detail">${s.detail}</div><div class="sc-source">${s.source}</div>`;c.appendChild(d)});document.getElementById('ps-title').textContent=q.proposalTitle;const l=document.getElementById('ps-list');l.innerHTML='';q.proposals.forEach(p=>{const li=document.createElement('li');li.textContent=p;l.appendChild(li)});document.getElementById('proposals-section').style.animation='none';document.getElementById('proposals-section').offsetHeight;document.getElementById('proposals-section').style.animation='fadeUp 0.5s 0.7s forwards'}
+function shareQuartier(){const n=selectedQuartier.nameClean||selectedQuartier.name.replace(/<br\s*\/?>/g,' '),t=`J'ai découvert les chiffres de mon quartier (${n}) à Mérignac 🏙️\nDes données que la mairie ne communique pas…\nDécouvre les tiens 👉`,u=window.location.href;if(navigator.share)navigator.share({title:'Ton quartier en 3 chiffres',text:t,url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t+' '+u).then(()=>{const b=document.getElementById('btn-share');b.textContent='✓ Copié !';setTimeout(()=>{b.textContent='Partager'},2000)})}
+const g=document.getElementById('quartier-grid');QUARTIERS.forEach((q,i)=>{const b=document.createElement('button');b.className='q-btn';b.innerHTML=`<span class="q-icon">${q.icon}</span>${q.name}`;b.onclick=()=>selectQuartier(i);g.appendChild(b)});
+</script>
+</body>
+</html>
